@@ -1,5 +1,5 @@
 import mongoose, {Schema} from "mongoose";
-import { JsonWebTokenError } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
 const userSchema = new Schema({
@@ -24,7 +24,7 @@ const userSchema = new Schema({
         trim: true,
         index: true
     },
-    avtar: {
+    avatar: {
         type: String, // Cloudinary url
         required: true
     },
@@ -56,7 +56,7 @@ userSchema.pre("save", async function (next) {
 
 // Custom methods
 userSchema.methods.isPasswordCorrect = async function(password){
-    await bcrypt.compare(password, this.password) //[this.password] is encrypted & [password] is myPlaintextPassword
+    return await bcrypt.compare(password, this.password) //[this.password] is encrypted & [password] is myPlaintextPassword
 }
 
 userSchema.methods.generateAccessToken = function(){ //we have access of database that's why we are creating function and using this keyword not arrow function
